@@ -2,6 +2,7 @@ package com.modul2.learning.controller;
 
 import com.modul2.learning.dto.UserDTO;
 import com.modul2.learning.entities.User;
+import com.modul2.learning.mapper.UserMapper;
 import com.modul2.learning.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ import java.util.List;
 //folosim forma de plural la endpoints
 @RequestMapping("/users")
 public class UserController {
+
     //dependency injection + inversion of control
     //bean - un object manage-uit de SpringBoot
     @Autowired
     private UserService userService;
+
 
     //cand cream date, folosim POST
     //nu mai este nevoie de "/create", pentru ca un POST reprezinta automat crearea unei noi entitati (ca principiu)
@@ -30,6 +33,7 @@ public class UserController {
         //pas 3: convertesc entitatea din nou intr-un DTO
         return ResponseEntity.ok(createdUser);
     }
+
 
     //returnam un user dupa id
     //id-ul il pun in path/cale, pentru ca un GET nu are request body (doar response body)
@@ -56,6 +60,13 @@ public class UserController {
     public ResponseEntity<?> delete(@PathVariable Long userId) {
         userService.delete(userId);
         return ResponseEntity.ok("User deleted successfully!!");
+    }
+
+    @PostMapping("/with-apps")
+    public ResponseEntity<?> createWithApplications(@RequestBody UserDTO userDTO) {
+        User userToCreate = UserMapper.userDTO2User(userDTO);
+        User createdUser = userService.create(userToCreate);
+        return ResponseEntity.ok(UserMapper.user2UserDTO(createdUser));
     }
 
 
