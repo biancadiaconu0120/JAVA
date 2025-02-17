@@ -3,6 +3,7 @@ package com.modul2.learning.mapper;
 import com.modul2.learning.dto.UserDTO;
 import com.modul2.learning.entities.Application;
 import com.modul2.learning.entities.User;
+import com.modul2.learning.entities.Book;
 
 import java.util.List;
 
@@ -13,11 +14,18 @@ public class UserMapper {
         user.setLastName(userDTO.getLastName());
         user.setAge(userDTO.getAge());
         user.setUserName(userDTO.getUserName());
+
         List<Application> applications = userDTO.getApplications().stream()
-//                .map(applicationDto -> ApplicationMapper.applicationDTO2Application(applicationDto))
                 .map(ApplicationMapper::applicationDTO2Application)
                 .toList();
         user.setApplications(applications);
+
+        List<Book> books = userDTO.getBooks().stream()
+                .map(BookMapper::bookDto2Book)
+                .peek(book -> book.setUser(user)) // Maintain bidirectional link
+                .toList();
+        user.setBooks(books);
+
         return user;
     }
 
@@ -28,10 +36,15 @@ public class UserMapper {
         userDTO.setLastName(user.getLastName());
         userDTO.setAge(user.getAge());
         userDTO.setUserName(user.getUserName());
+
         userDTO.setApplications(user.getApplications().stream()
                 .map(ApplicationMapper::application2ApplicationDTO)
                 .toList());
-        //ideal: trebuia sa fie si books aici
+
+        userDTO.setBooks(user.getBooks().stream()
+                .map(BookMapper::book2BookDto)
+                .toList());
+
         return userDTO;
     }
 }

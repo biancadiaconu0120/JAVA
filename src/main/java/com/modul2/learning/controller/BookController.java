@@ -18,10 +18,19 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    //TASK:Create a Book with User ID
     @PostMapping("/{userId}")
     public ResponseEntity<?> create(@PathVariable Long userId, @RequestBody BookDTO bookDto) {
         Book bookToCreate = BookMapper.bookDto2Book(bookDto);
         Book createdBook = bookService.create(bookToCreate, userId);
         return ResponseEntity.ok(BookMapper.book2BookDto(createdBook));
     }
+
+    @PostMapping()
+    public ResponseEntity<?> createBook(@RequestBody BookDTO bookDTO) {
+        Book book = BookMapper.bookDto2Book(bookDTO);
+        Book createdBook = bookService.createWithoutUser(book);
+        return ResponseEntity.ok(BookMapper.book2BookDto(createdBook));
+    }
+
 }

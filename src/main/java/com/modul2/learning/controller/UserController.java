@@ -55,11 +55,11 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-
+    //TASK: Delete Parent Should Delete Child (CascadeType.REMOVE)
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> delete(@PathVariable Long userId) {
         userService.delete(userId);
-        return ResponseEntity.ok("User deleted successfully!!");
+        return ResponseEntity.ok("User and associated books deleted successfully!!");
     }
 
     @PostMapping("/with-apps")
@@ -68,6 +68,33 @@ public class UserController {
         User createdUser = userService.create(userToCreate);
         return ResponseEntity.ok(UserMapper.user2UserDTO(createdUser));
     }
+    //TASK 1: OneToMany
+    //create parent with children (1)
+    @PostMapping("/with-books")
+    public ResponseEntity<?> createUserWithBooks(@RequestBody UserDTO userDTO) {
+        User user = UserMapper.userDTO2User(userDTO);
+        user.getBooks().forEach(book -> book.setUser(user));
+        User createdUser = userService.create(user);
+        return ResponseEntity.ok(UserMapper.user2UserDTO(createdUser));
+    }
+    //TASK: Add Existing Child to Parent
+    @PutMapping("/{userId}/add-book/{bookId}")
+    public ResponseEntity<?> addBookToUser(@PathVariable Long userId, @PathVariable Long bookId) {
+        User updatedUser = userService.addBookToUser(userId, bookId);
+        return ResponseEntity.ok(UserMapper.user2UserDTO(updatedUser));
+    }
 
+    @PutMapping("/{userId}/add-application/{applicationId}")
+    public ResponseEntity<?> addApplicationToUser(@PathVariable Long userId, @PathVariable Long applicationId) {
+        User updatedUser = userService.addApplicationToUser(userId, applicationId);
+        return ResponseEntity.ok(UserMapper.user2UserDTO(updatedUser));
+    }
+
+    //TASK: Remove Child from Parent (Test Orphan Removal)
+    @PutMapping("/{userId}/remove-book/{bookId}")
+    public ResponseEntity<?> removeBookFromUser(@PathVariable Long userId, @PathVariable Long bookId) {
+        User updatedUser = userService.removeBookFromUser(userId, bookId);
+        return ResponseEntity.ok(UserMapper.user2UserDTO(updatedUser));
+    }
 
 }

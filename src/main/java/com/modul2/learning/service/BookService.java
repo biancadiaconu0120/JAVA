@@ -26,4 +26,9 @@ public class BookService {
         bookRepository.save(bookToCreate);
         return bookToCreate;
     }
+
+    public Book createWithoutUser(Book book) {
+        return bookRepository.save(book);
+    }
+
 }
