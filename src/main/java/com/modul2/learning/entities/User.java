@@ -1,49 +1,51 @@
 package com.modul2.learning.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.List;
-
-//este util sa punem si proprietatea name, la @Entity, atunci cand vrem sa construim query-uri si in acele query-uri sa facem
-//"referinta" catre acea tabela/entitate
-@Entity(name = "user")   // mapped to a database table (in cazul nostru tabelul v a fi user)
-@Table(name = "user", schema = "public") //Specifies the table name explicitly (user) si pune schema pe public
-
-
-//de aici incep field urile pt User
+@Entity(name = "user")
+@Table(name = "user", schema = "public")
 public class User {
-    @Id   //annotation pt PK
-    @Column(name = "ID")  //annotation pt coloana
-    //TODO: de cautat un exemplu cu diferentele de @GeneratedValue
-    @GeneratedValue(strategy = GenerationType.IDENTITY)   // anntation: id will be auto-incremented by the database
-    private Long id;    //aici e exemplu cu GenerationType.IDENTITY
 
-    @Column(name = "USER_NAME")
-    private String userName;   //coloana userName
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "FIRST_NAME")
-    private String firstName;   //coloana firstName
+    @Column(name="FIRST_NAME", nullable=false)
+    private String firstName;
 
-    @Column(name = "LAST_NAME")
-    private String lastName;   //coloana lastName
+    @Column(name="LAST_NAME", nullable=false)
+    private String lastName;
 
-    @Column(name = "AGE")
-    private Integer age;   //coloana age
+    @Column(name="YEAR_OF_BIRTH", nullable=false)
+    private Integer yearOfBirth;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            fetch = FetchType.LAZY,
-            //daca voi scoate din lista o carte atunci la salvarea userului, cartea va fi stearsa din baza de date
-            orphanRemoval = true,
-            //cum se numeste
-            mappedBy = "user")
-    private List<Book> books = new ArrayList<>();
+    @Column(name="GENDER", nullable=false)
+    private String gender;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(name = "USER_APPLICATION", schema = "public",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "application_id", nullable = false))
-    private List<Application> applications = new ArrayList<>();
+    @Column(name="EMAIL", unique=true, nullable=false)
+    private String email;
+
+    @Column(name="PHONE_NUMBER", unique=true, nullable=false)
+    private String phoneNumber;
+
+    @Column(name="COUNTRY", nullable=false)
+    private String country;
+
+    @Column(name="PASSWORD", nullable=false)
+    private String password;  // Stores the SHA-256 hashed password
+
+    @Column(name="VERIFIED_ACCOUNT")
+    private boolean verifiedAccount = false;  // Default unverified
+
+    // Optional fields for verification details:
+    @Column(name="VERIFICATION_CODE")
+    private String verificationCode;
+
+    @Column(name="VERIFICATION_CODE_GENERATION_TIME")
+    private LocalDateTime verificationCodeGenerationTime;
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -51,14 +53,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -77,37 +71,75 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
-        return age;
+    public Integer getYearOfBirth() {
+        return yearOfBirth;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setYearOfBirth(Integer yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public String getGender() {
+        return gender;
     }
 
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.setUser(this);
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public String getEmail() {
+        return email;
     }
 
-    public List<Application> getApplications() {
-        return applications;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void addApplication(Application application) {
-        this.applications.add(application);
-        application.addUser(this);
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isVerifiedAccount() {
+        return verifiedAccount;
+    }
+
+    public void setVerifiedAccount(boolean verifiedAccount) {
+        this.verifiedAccount = verifiedAccount;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public LocalDateTime getVerificationCodeGenerationTime() {
+        return verificationCodeGenerationTime;
+    }
+
+    public void setVerificationCodeGenerationTime(LocalDateTime verificationCodeGenerationTime) {
+        this.verificationCodeGenerationTime = verificationCodeGenerationTime;
     }
 }

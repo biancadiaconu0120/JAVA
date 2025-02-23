@@ -4,12 +4,17 @@ import java.util.List;
 
 public class UserDTO {
     private Long id;
-    private String userName;
     private String firstName;
     private String lastName;
-    private Integer age;
-    private List<BookDTO> books;
-    private List<ApplicationDTO> applications;
+    private int yearOfBirth;
+    private String gender;
+    private String email;
+    private String phoneNumber;
+    private String password;  // Plain text; will be hashed before saving.
+    private String country;
+    private Boolean verifiedAccount = false;  // Default is false
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -17,14 +22,6 @@ public class UserDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -43,30 +40,59 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
-        return age;
+    public int getYearOfBirth() {
+        return yearOfBirth;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 
-    public List<BookDTO> getBooks() {
-        return books;
+    public String getGender() {
+        return gender;
     }
 
-    public void setBooks(List<BookDTO> books) {
-        this.books = books;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public List<ApplicationDTO> getApplications() {
-        return applications;
+    public String getEmail() {
+        return email;
     }
 
-    public void setApplications(List<ApplicationDTO> applications) {
-        this.applications = applications;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Boolean getVerifiedAccount() {
+        return verifiedAccount;
+    }
+
+    public void setVerifiedAccount(Boolean verifiedAccount) {
+        this.verifiedAccount = verifiedAccount;
+    }
 }

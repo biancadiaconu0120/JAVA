@@ -1,30 +1,28 @@
 package com.modul2.learning.mapper;
 
 import com.modul2.learning.dto.UserDTO;
-import com.modul2.learning.entities.Application;
 import com.modul2.learning.entities.User;
-import com.modul2.learning.entities.Book;
-
-import java.util.List;
+import com.modul2.learning.utils.PasswordUtils;
 
 public class UserMapper {
+
     public static User userDTO2User(UserDTO userDTO) {
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setAge(userDTO.getAge());
-        user.setUserName(userDTO.getUserName());
+        user.setYearOfBirth(userDTO.getYearOfBirth());
+        user.setGender(userDTO.getGender());
+        user.setEmail(userDTO.getEmail());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setCountry(userDTO.getCountry());
 
-        List<Application> applications = userDTO.getApplications().stream()
-                .map(ApplicationMapper::applicationDTO2Application)
-                .toList();
-        user.setApplications(applications);
+        // Hash the password before storing
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(PasswordUtils.hashPassword(userDTO.getPassword()));
+        }
 
-        List<Book> books = userDTO.getBooks().stream()
-                .map(BookMapper::bookDto2Book)
-                .peek(book -> book.setUser(user)) // Maintain bidirectional link
-                .toList();
-        user.setBooks(books);
+        // Force verifiedAccount to false on registration
+        user.setVerifiedAccount(false);
 
         return user;
     }
@@ -34,17 +32,14 @@ public class UserMapper {
         userDTO.setId(user.getId());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
-        userDTO.setAge(user.getAge());
-        userDTO.setUserName(user.getUserName());
-
-        userDTO.setApplications(user.getApplications().stream()
-                .map(ApplicationMapper::application2ApplicationDTO)
-                .toList());
-
-        userDTO.setBooks(user.getBooks().stream()
-                .map(BookMapper::book2BookDto)
-                .toList());
-
+        userDTO.setYearOfBirth(user.getYearOfBirth());
+        userDTO.setGender(user.getGender());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setCountry(user.getCountry());
+        // Do not expose the hashed password in the DTO
+        userDTO.setPassword(null);
+        userDTO.setVerifiedAccount(user.isVerifiedAccount());
         return userDTO;
     }
 }
