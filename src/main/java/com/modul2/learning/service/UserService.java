@@ -1,10 +1,8 @@
 package com.modul2.learning.service;
 
-import com.modul2.learning.entities.Application;
-import com.modul2.learning.entities.Book;
+
 import com.modul2.learning.entities.User;
-import com.modul2.learning.repository.ApplicationRepository;
-import com.modul2.learning.repository.BookRepository;
+
 import com.modul2.learning.repository.UserRepository;
 import com.modul2.learning.utils.PasswordUtils;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,6 +53,21 @@ public class UserService {
         } catch (Exception ex) {
             throw new RuntimeException("Failed to register user", ex);
         }
+    }
+
+    // Method to verify the account using email and code
+    public boolean verifyAccount(String email, String code) {
+        // Check the verification code (from in-memory storage)
+        boolean valid = emailService.verifyUser(email, code);
+        if (valid) {
+            // Retrieve the user by email and update the verified flag
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            user.setVerifiedAccount(true);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     // Retrieve a user by ID

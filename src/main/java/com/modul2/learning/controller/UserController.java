@@ -29,6 +29,15 @@ public class UserController {
         User createdUser = userService.create(user);
         return ResponseEntity.ok(UserMapper.user2UserDTO(createdUser));
     }
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam String email, @RequestParam String code) {
+        boolean verified = userService.verifyAccount(email, code);
+        if (verified) {
+            return ResponseEntity.ok("Account verified successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid or expired verification code");
+        }
+    }
 
 
 
@@ -66,9 +75,6 @@ public class UserController {
         User updatedUser = userService.update(userId, user);
         return ResponseEntity.ok(updatedUser);
     }
-
-
-
 
 
 
