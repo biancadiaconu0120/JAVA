@@ -37,7 +37,7 @@ public class UserService {
 
         try {
             // Hash the password and set verifiedAccount to false
-            user.setPassword(PasswordUtils.hashPassword(user.getPassword()));
+            user.setPassword(PasswordUtils.hashPassword(user.getPassword().trim()));
             user.setVerifiedAccount(false);
 
             // Save the user
@@ -55,7 +55,7 @@ public class UserService {
         }
     }
 
-    // Method to verify the account using email and code
+    // VERIFY ACCOUNT
     public boolean verifyAccount(String email, String code) {
         // Check the verification code (from in-memory storage)
         boolean valid = emailService.verifyUser(email, code);
@@ -69,6 +69,45 @@ public class UserService {
         }
         return false;
     }
+
+    public User login(String email, String password) {
+        // Normalize email
+        String normalizedEmail = email.toLowerCase().trim();
+
+        // Retrieve the user entity by normalized email
+        User user = userRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User not found for email: " + normalizedEmail));
+
+        // Log raw input details for debugging
+        System.out.println("Raw password input: '" + password + "'");
+        String trimmedPassword = password.trim();
+        System.out.println("Trimmed password: '" + trimmedPassword + "', length: " + trimmedPassword.length());
+
+        // Check if the input appears to be a SHA-256 hash (64 hex characters)
+        boolean isAlreadyHashed = trimmedPassword.matches("^[a-fA-F0-9]{64}$");
+        String hashedInput;
+        if (isAlreadyHashed) {
+            System.out.println("Detected already hashed input.");
+            hashedInput = trimmedPassword;
+        } else {
+            hashedInput = PasswordUtils.hashPassword(trimmedPassword);
+        }
+
+        System.out.println("Computed hash: " + hashedInput);
+        System.out.println("Stored hash: " + user.getPassword());
+
+        if (!user.getPassword().equals(hashedInput)) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+
+        if (!user.isVerifiedAccount()) {
+            throw new IllegalStateException("Account is not verified");
+        }
+
+        return user;
+    }
+
+
 
     // Retrieve a user by ID
     public User getById(Long userId) {
@@ -85,7 +124,7 @@ public class UserService {
     public User update(Long userId, User user) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        // Update only the fields provided in the registration/CRUD DTO
+
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setYearOfBirth(user.getYearOfBirth());
@@ -93,7 +132,7 @@ public class UserService {
         existingUser.setEmail(user.getEmail());
         existingUser.setPhoneNumber(user.getPhoneNumber());
         existingUser.setCountry(user.getCountry());
-        // Password updates and verification changes could be handled separately
+
         return userRepository.save(existingUser);
     }
 

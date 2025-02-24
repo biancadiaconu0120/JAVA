@@ -4,6 +4,7 @@ import com.modul2.learning.dto.UserDTO;
 import com.modul2.learning.entities.User;
 import com.modul2.learning.mapper.UserMapper;
 import com.modul2.learning.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class UserController {
         User createdUser = userService.create(user);
         return ResponseEntity.ok(UserMapper.user2UserDTO(createdUser));
     }
+    //VERIFY ENDPOINT
     @PostMapping("/verify")
     public ResponseEntity<?> verifyAccount(@RequestParam String email, @RequestParam String code) {
         boolean verified = userService.verifyAccount(email, code);
@@ -38,6 +40,16 @@ public class UserController {
             return ResponseEntity.badRequest().body("Invalid or expired verification code");
         }
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+        try {
+            User user = userService.login(email, password);
+            return ResponseEntity.ok(UserMapper.user2UserDTO(user));
+        } catch (EntityNotFoundException | IllegalArgumentException | IllegalStateException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
 
 
 
