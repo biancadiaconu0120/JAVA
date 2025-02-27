@@ -17,7 +17,7 @@ public class LibrarianController {
     @Autowired
     private LibrarianService librarianService;
 
-    // Register Librarian (with Library creation)
+
     @PostMapping("/register")
     public ResponseEntity<?> registerLibrarian(@RequestBody LibrarianDTO librarianDTO) {
         Librarian librarian = LibrarianMapper.librarianDTO2Librarian(librarianDTO);
@@ -34,9 +34,9 @@ public class LibrarianController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+    //sa fac cu request body si loginul dar sa nu am DTO special pt login
 
 
-    // Verify Librarian Account (optional)
     @PostMapping("/verify")
     public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String code) {
         boolean verified = librarianService.verifyAccount(email, code);

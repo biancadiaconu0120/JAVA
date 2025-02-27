@@ -1,10 +1,13 @@
 package com.modul2.learning.dto;
 
+import java.util.List;
+
 public class LibraryDTO {
     private Long id;
     private String name;
     private String address;
     private String phoneNumber;
+    private List<BookDTO> books;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -18,4 +21,12 @@ public class LibraryDTO {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public List<BookDTO> getBooks() {
+        return books;
+    }
+    public void setBooks(List<BookDTO> books) {
+        this.books = books;
+    }
+
 }

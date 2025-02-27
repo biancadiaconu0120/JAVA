@@ -46,7 +46,7 @@ public class BookService {
         existingBook.setNrOfPages(updatedBook.getNrOfPages());
         existingBook.setCategory(updatedBook.getCategory());
         existingBook.setLanguage(updatedBook.getLanguage());
-        // Optionally, update the library association if required
+
         return bookRepository.save(existingBook);
     }
 

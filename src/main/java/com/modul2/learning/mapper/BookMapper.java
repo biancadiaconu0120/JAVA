@@ -12,7 +12,7 @@ public class BookMapper {
         book.setAuthor(dto.getAuthor());
         book.setAppearanceDate(dto.getAppearanceDate());
         book.setNrOfPages(dto.getNrOfPages());
-        // Convert category string to enum (assumes the provided string matches an enum constant)
+        // Convert category string to enum
         book.setCategory(BookCategory.valueOf(dto.getCategory().toUpperCase()));
         book.setLanguage(dto.getLanguage());
         // library association will be set in the service method using dto.getLibraryId()
@@ -27,7 +27,7 @@ public class BookMapper {
         dto.setAuthor(book.getAuthor());
         dto.setAppearanceDate(book.getAppearanceDate());
         dto.setNrOfPages(book.getNrOfPages());
-        dto.setCategory(book.getCategory().name());
+        dto.setCategory(book.getCategory().name());//converts enum in string
         dto.setLanguage(book.getLanguage());
         if (book.getLibrary() != null) {
             dto.setLibraryId(book.getLibrary().getId());

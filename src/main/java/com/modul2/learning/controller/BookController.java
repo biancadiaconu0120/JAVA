@@ -32,7 +32,7 @@ public class BookController {
         return ResponseEntity.ok("Book removed successfully");
     }
 
-    // Edit a book
+    // Update a book
     @PutMapping("/{bookId}")
     public ResponseEntity<?> updateBook(@PathVariable Long bookId, @RequestBody BookDTO bookDTO) {
         Book book = BookMapper.bookDTO2Book(bookDTO);
@@ -40,7 +40,7 @@ public class BookController {
         return ResponseEntity.ok(BookMapper.book2BookDTO(updatedBook));
     }
 
-    // Get a single book by id
+    // Get a book by id
     @GetMapping("/{bookId}")
     public ResponseEntity<?> getBook(@PathVariable Long bookId) {
         Book book = bookService.getBook(bookId);
@@ -61,3 +61,4 @@ public class BookController {
         return ResponseEntity.ok(bookPage.map(BookMapper::book2BookDTO));
     }
 }
+//SA le am in forma de CRUD adica sa fie create .... delete ca sa stim ca delete-ul e ultimul.

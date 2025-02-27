@@ -16,7 +16,7 @@ public class LibrarianService {
     @Autowired
     private EmailService emailService;
 
-    // Register Librarian (with Library creation)
+    // Register Librarian
     public Librarian register(Librarian librarian) {
         if (librarian.getPassword() != null && !librarian.getPassword().isEmpty()) {
             librarian.setPassword(PasswordUtils.hashPassword(librarian.getPassword().trim()));
@@ -38,10 +38,10 @@ public class LibrarianService {
                 .orElseThrow(() -> new EntityNotFoundException("Librarian not found for email: " + normalizedEmail));
         String hashedInput = PasswordUtils.hashPassword(password.trim());
         if (!librarian.getPassword().equals(hashedInput)) {
-            throw new IllegalArgumentException("Invalid credentials");
+            throw new EntityNotFoundException("Invalid credentials");
         }
         if (!librarian.isAccountVerified()) {
-            throw new IllegalStateException("Account is not verified");
+            throw new EntityNotFoundException("Account is not verified");
         }
         return librarian;
     }
@@ -52,6 +52,7 @@ public class LibrarianService {
         if (valid) {
             Librarian librarian = librarianRepository.findByEmail(email.toLowerCase().trim())
                     .orElseThrow(() -> new EntityNotFoundException("Librarian not found"));
+
             librarian.setAccountVerified(true);
             librarianRepository.save(librarian);
             return true;

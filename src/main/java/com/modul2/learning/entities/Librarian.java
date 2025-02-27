@@ -12,17 +12,17 @@ public class Librarian {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "EMAIL", unique = true, nullable = false)
+    @Column(name = "EMAIL", unique = true, nullable = false) //am pus unic ca sa nu avem 2 cu acelasi email
     private String email;
 
     @Column(name = "PASSWORD", nullable = false)
-    private String password; // Stored as SHA-256 hash
+    private String password;
 
     @Column(name = "ACCOUNT_VERIFIED")
-    private boolean accountVerified = false;
+    private boolean accountVerified = false; //false initial
 
-    // OneToOne with Library (owning side)
-    @OneToOne(cascade = CascadeType.ALL)
+    // OneToOne with Library (fiecare Librarian are un Library)
+    @OneToOne(cascade = CascadeType.ALL)//persist,merge,remove sunt incluse in ALL
     @JoinColumn(name = "library_id", referencedColumnName = "id")
     private Library library;
 
@@ -48,7 +48,7 @@ public class Librarian {
     }
 
     public void setEmail(String email) {
-        this.email = email.toLowerCase().trim();
+        this.email = email.toLowerCase().trim(); //pt login desi nu merge?????
     }
 
     public String getPassword() {
