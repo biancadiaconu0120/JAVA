@@ -2,6 +2,7 @@ package com.modul2.learning.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "user")
 @Table(name = "user", schema = "public")
@@ -45,7 +46,18 @@ public class User {
     @Column(name="VERIFICATION_CODE_GENERATION_TIME")
     private LocalDateTime verificationCodeGenerationTime;
 
-    // Getters and Setters
+    //One to Many un user are mai multe rezervari
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Reservation> reservations;
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+// Getters and Setters
 
     public Long getId() {
         return id;

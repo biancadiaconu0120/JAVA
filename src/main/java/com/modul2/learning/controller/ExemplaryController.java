@@ -22,16 +22,10 @@ public class ExemplaryController {
 
     @Autowired
     private ExemplaryService exemplaryService;
-    @Autowired
-    private ExemplaryRepository exemplaryRepository;
 
     // Add exemplars to a book
     @PostMapping("/book/{bookId}/create-multiple")
-    public ResponseEntity<?> createMultipleExemplars(
-            @PathVariable Long bookId,
-            @RequestParam int numberOfExemplars,
-            @RequestBody ExemplaryDTO exemplaryDTO) {
-
+    public ResponseEntity<?> createMultipleExemplars(@PathVariable Long bookId, @RequestParam int numberOfExemplars, @RequestBody ExemplaryDTO exemplaryDTO) {
         Exemplary exemplaryToCreate = ExemplaryMapping.exemplaryDTO2Exemplary(exemplaryDTO);
         List<Exemplary> createdExemplars = exemplaryService.createMultipleExemplars(bookId, numberOfExemplars, exemplaryToCreate);
 
@@ -51,9 +45,9 @@ public class ExemplaryController {
 
         return ResponseEntity.ok(exemplaryDTOs);
     }
+
     @GetMapping("/book/{bookId}/paginated")
     public ResponseEntity<Page<ExemplaryDTO>> getPaginatedExemplarsByBook(@PathVariable Long bookId, @RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "id") String sortBy, @RequestParam(defaultValue = "asc") String direction) {
-
         Page<Exemplary> exemplarsPage = exemplaryService.getPaginatedExemplarsByBook(bookId, page, size, sortBy, direction);
         Page<ExemplaryDTO> exemplaryDTOs = exemplarsPage.map(ExemplaryMapping::exemplary2DTO);
 
