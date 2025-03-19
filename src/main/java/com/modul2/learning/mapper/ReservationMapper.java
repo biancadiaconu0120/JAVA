@@ -7,13 +7,13 @@ import com.modul2.learning.entities.Exemplary;
 
 public class ReservationMapper {
 
-    public static Reservation reservationDTO2Reservation(ReservationDTO reservationDTO, User user, Exemplary exemplary) {
+    public static Reservation reservationDTO2Reservation(ReservationDTO reservationDTO) {
         Reservation reservation = new Reservation();
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStatus(reservationDTO.getStatus());
-        reservation.setUser(user);
-        reservation.setExemplary(exemplary);
+//        reservation.setUser(user);
+//        reservation.setExemplary(exemplary);
         return reservation;
     }
 

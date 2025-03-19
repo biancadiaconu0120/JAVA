@@ -20,6 +20,8 @@ public class ReservationService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LibrarianRepository librarianRepository;
 
     public Reservation createReservation(Long userId, String title, String author, LocalDate startDate, LocalDate endDate) {
         User user = userRepository.findById(userId)
@@ -32,7 +34,7 @@ public class ReservationService {
         Exemplary exemplary = reservationRepository.findFirstAvailableExemplary(book.getId(), startDate, endDate)
                 .orElseThrow(() -> new IllegalStateException("No available exemplary for this book in that period"));
 
-        // Create a new reservation and set values using setters
+
         Reservation reservation = new Reservation();
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
@@ -42,5 +44,29 @@ public class ReservationService {
 
         return reservationRepository.save(reservation);
     }
+
+    public Reservation updateReservation(Long reservationId, Long librarianId, Reservation updatedReservation) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+        Librarian librarian = librarianRepository.findById(librarianId)
+                .orElseThrow(() -> new EntityNotFoundException("Librarian not found"));
+
+        // check to see if librarian has access to the exemplary
+        if (!librarian.getLibrary().equals(reservation.getExemplary().getBook().getLibrary())) {
+            throw new IllegalStateException("Librarian does not have access to this exemplary!");
+        }
+
+        // validate the status transition
+        if (!reservation.getStatus().isNextStatePossible(updatedReservation.getStatus())) {
+            throw new IllegalStateException("You can t make a transition from " + reservation.getStatus() + " to " + updatedReservation.getStatus());
+        }
+
+
+        reservation.setStatus(updatedReservation.getStatus());
+        return reservationRepository.save(reservation);
+    }
+
 
 }

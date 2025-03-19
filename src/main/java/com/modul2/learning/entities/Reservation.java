@@ -31,6 +31,14 @@ public class Reservation {
     @JoinColumn(name = "EXEMPLARY_ID", nullable = false)
     private Exemplary exemplary;
 
+    @Version
+    @Column(name= "version")
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
     public Long getId() {
         return id;
     }

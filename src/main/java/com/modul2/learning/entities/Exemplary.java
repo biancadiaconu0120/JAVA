@@ -2,6 +2,7 @@ package com.modul2.learning.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -10,6 +11,13 @@ public class Exemplary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(name= "version")
+    private Integer version;
+
+    @Column(name = "update_time", nullable = false)
+    private LocalDate updateTime;
 
     @Column(name = "PUBLISHER", nullable = false)
     private String publisher;
@@ -21,7 +29,6 @@ public class Exemplary {
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
-
 
     //un exemplar are mai multe reservari
     //tre sa adaug eu LAZY si EAGER si orphanRemoval=true
