@@ -16,8 +16,8 @@ public class Exemplary {
     @Column(name= "version")
     private Integer version;
 
-    @Column(name = "update_time", nullable = false)
-    private LocalDate updateTime;
+//    @Column(name = "update_time", nullable = false)
+//    private LocalDate updateTime;
 
     @Column(name = "PUBLISHER", nullable = false)
     private String publisher;

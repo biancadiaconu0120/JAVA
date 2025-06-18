@@ -3,6 +3,7 @@ package com.modul2.learning.repository;
 import com.modul2.learning.entities.Book;
 import com.modul2.learning.entities.Exemplary;
 import com.modul2.learning.entities.Reservation;
+import com.modul2.learning.entities.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             """, nativeQuery = true)
     Optional<Exemplary> findFirstAvailableExemplary(Long bookId, LocalDate startDate, LocalDate endDate);
 
+    List<Reservation> findByStatusAndStartDateBefore(ReservationStatus status, LocalDate date);
+
+    List<Reservation> findByStatusAndEndDateBefore(ReservationStatus status, LocalDate date);
 }
